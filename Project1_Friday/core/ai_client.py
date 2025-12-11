@@ -1,10 +1,7 @@
 from openai import OpenAI
 import os
 
-# Use environment variable instead of hardcoded key
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")  # Set this in your environment
-)
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def openai_response(command: str) -> str:
     """
@@ -12,15 +9,13 @@ def openai_response(command: str) -> str:
     """
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Fixed: Use real model
+            model="gpt-5-nano",
             messages=[
                 {"role": "user", "content": command}
-            ],
-            max_tokens=150
+            ]
         )
 
-        # Fixed: Correct response structure
-        output = response.choices[0].message.content.strip()
+        output = response.choices[0].message["content"].strip()
         print("AI Response:", output)
         return output
 
