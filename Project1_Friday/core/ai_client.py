@@ -1,23 +1,26 @@
 from openai import OpenAI
+import os
 
-# Initialize OpenAI client once
+# Use environment variable instead of hardcoded key
 client = OpenAI(
-    api_key="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"
+    api_key=os.getenv("OPENAI_API_KEY")  # Set this in your environment
 )
 
 def openai_response(command: str) -> str:
     """
     Sends the command to OpenAI and returns the text response.
     """
-
     try:
-        response = client.responses.create(
-            model="gpt-5-nano",
-            input=command
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",  # Fixed: Use real model
+            messages=[
+                {"role": "user", "content": command}
+            ],
+            max_tokens=150
         )
 
-        # Extract the text from the response
-        output = response.output_text.strip()
+        # Fixed: Correct response structure
+        output = response.choices[0].message.content.strip()
         print("AI Response:", output)
         return output
 
